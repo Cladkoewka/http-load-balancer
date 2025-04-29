@@ -17,6 +17,7 @@ func main() {
 	}
 
 	lb := balancer.NewLoadBalancer(cfg.BackendURLs, balancer.RoundRobin) // balancer algorithm
+	lb.StartHealthCheck(config.HealthCheckRate)
 
 	if err := server.StartServer(lb, cfg.Port); err != nil {
 		logger.Log.Error("Failed to start server:", "error", err)
