@@ -12,9 +12,9 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 		rr := &responseRecorder{ResponseWriter: rw, statusCode: http.StatusOK}
 		next.ServeHTTP(rr, r)
 
-		logger.Log.Info("HTTP request", 
-			"method", r.Method, 
-			"path", r.URL.Path, 
+		logger.Log.Info("HTTP request",
+			"method", r.Method,
+			"path", r.URL.Path,
 			"client", r.RemoteAddr,
 			"status", rr.statusCode,
 		)

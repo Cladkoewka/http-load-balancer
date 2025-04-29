@@ -8,7 +8,7 @@ import (
 
 type RateLimiter struct {
 	buckets map[string]*TokenBucket
-	mu sync.Mutex
+	mu      sync.Mutex
 }
 
 func NewRateLimiter() *RateLimiter {
@@ -20,9 +20,11 @@ func NewRateLimiter() *RateLimiter {
 func (rl *RateLimiter) GetOrCreateBucket(clientIP string) *TokenBucket {
 	rl.mu.Lock()
 	defer rl.mu.Unlock()
+
 	if bucket, exists := rl.buckets[clientIP]; exists {
 		return bucket
 	}
+
 	bucket := NewTokenBucket(config.BucketCapacity, config.BucketRefillRate)
 	rl.buckets[clientIP] = bucket
 	return bucket

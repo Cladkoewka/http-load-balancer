@@ -3,6 +3,8 @@ package server
 import (
 	"net"
 	"net/http"
+
+	"github.com/Cladkoewka/http-load-balancer/internal/logger"
 	"github.com/Cladkoewka/http-load-balancer/internal/ratelimiter"
 )
 
@@ -15,9 +17,11 @@ func RateLimitMiddleware(rl *ratelimiter.RateLimiter, next http.Handler) http.Ha
 		}
 
 		bucket := rl.GetOrCreateBucket(clientIP)
+		logger.Log.Info("Rate limit check", "ClientIP", clientIP, "RemainingTokens", bucket.TokensLeft())
 
 		if !bucket.Allow() {
 			http.Error(rw, "Too Many Requests", http.StatusTooManyRequests)
+			logger.Log.Warn("Rate limit exceeded", "ClientIP", clientIP)
 			return
 		}
 

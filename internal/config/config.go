@@ -8,7 +8,7 @@ import (
 )
 
 type Config struct {
-	Port int `yaml:"port"`
+	Port        int      `yaml:"port"`
 	BackendURLs []string `yaml:"backendURLs"`
 }
 

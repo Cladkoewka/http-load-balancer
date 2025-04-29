@@ -1,10 +1,10 @@
 package proxy
 
 import (
+	"github.com/Cladkoewka/http-load-balancer/internal/balancer"
+	"github.com/Cladkoewka/http-load-balancer/internal/logger"
 	"net/http"
 	"net/http/httputil"
-	"github.com/Cladkoewka/http-load-balancer/internal/logger"
-	"github.com/Cladkoewka/http-load-balancer/internal/balancer"
 )
 
 func ProxyHandler(lb *balancer.LoadBalancer) http.HandlerFunc {
@@ -17,7 +17,6 @@ func ProxyHandler(lb *balancer.LoadBalancer) http.HandlerFunc {
 
 		logger.Log.Info("forwarding request", "url", r.URL.String(), "backend", backendURL.String())
 
-		
 		proxy := httputil.NewSingleHostReverseProxy(backendURL)
 		proxy.ServeHTTP(rw, r)
 	}

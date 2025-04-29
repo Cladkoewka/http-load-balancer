@@ -16,7 +16,7 @@ func main() {
 		logger.Log.Error("failed to load config", "error", err)
 	}
 
-	lb := balancer.NewLoadBalancer(cfg.BackendURLs)
+	lb := balancer.NewLoadBalancer(cfg.BackendURLs, balancer.RoundRobin) // balancer algorithm
 
 	if err := server.StartServer(lb, cfg.Port); err != nil {
 		logger.Log.Error("Failed to start server:", "error", err)

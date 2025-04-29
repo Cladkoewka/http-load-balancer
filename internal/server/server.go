@@ -13,13 +13,16 @@ import (
 func StartServer(lb *balancer.LoadBalancer, port int) error {
 	rl := ratelimiter.NewRateLimiter()
 
+	mux := http.NewServeMux()
+
 	// Wrap the main handler with the logging middleware and rate limit middleware
 	var handler http.Handler
 	handler = http.HandlerFunc(proxy.ProxyHandler(lb))
 	handler = RateLimitMiddleware(rl, handler)
 	handler = LoggingMiddleware(handler)
-	
+
+	mux.Handle("/test", handler)
 
 	logger.Log.Info("Starting HTTP server", "port", port)
-	return http.ListenAndServe(fmt.Sprintf(":%d", port), handler)
-} 
+	return http.ListenAndServe(fmt.Sprintf(":%d", port), mux)
+}

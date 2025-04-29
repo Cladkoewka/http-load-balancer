@@ -6,20 +6,20 @@ import (
 )
 
 type TokenBucket struct {
-	capacity int
-	tokens int
-	refillRate int // count of adding tokens per time
-	lastRefill time.Time
-	mu sync.Mutex
+	capacity     int
+	tokens       int
+	refillRate   int // count of adding tokens per time
+	lastRefill   time.Time
+	mu           sync.Mutex
 	refillTicker *time.Ticker
 }
 
 func NewTokenBucket(capacity, refillRate int) *TokenBucket {
 	tb := &TokenBucket{
-		capacity: capacity,
-		tokens: capacity,
-		refillRate: refillRate,
-		lastRefill: time.Now(),
+		capacity:     capacity,
+		tokens:       capacity,
+		refillRate:   refillRate,
+		lastRefill:   time.Now(),
 		refillTicker: time.NewTicker(time.Second),
 	}
 	go tb.refillTokens()
@@ -47,4 +47,10 @@ func (tb *TokenBucket) Allow() bool {
 		return true
 	}
 	return false
+}
+
+func (tb *TokenBucket) TokensLeft() int {
+	tb.mu.Lock()
+	defer tb.mu.Unlock()
+	return tb.tokens
 }
