@@ -30,11 +30,11 @@ func (lb *LoadBalancer) GetNextBackendURL() (*url.URL, error) {
 	}
 
 	backendURL := lb.BackendURLs[lb.Index]
-	lb.Index = (lb.Index + 1 ) % len(lb.BackendURLs) // Round-Robin algorithm 
+	lb.Index = (lb.Index + 1 ) % len(lb.BackendURLs) // Round-Robin algorithm
 
 	parsedURL, err := url.Parse(backendURL)
 	if err != nil {
-		logger.Log.Error("failed to parse URL %s", backendURL)
+		logger.Log.Error("failed to parse URL", "backend URL", backendURL)
 		return nil, fmt.Errorf("failed to parse backend URL: %w", err)
 	}
 
