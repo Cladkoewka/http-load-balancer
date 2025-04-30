@@ -2,18 +2,22 @@ package ratelimiter
 
 import (
 	"sync"
-
-	"github.com/Cladkoewka/http-load-balancer/internal/config"
 )
 
 type RateLimiter struct {
 	buckets map[string]*TokenBucket
 	mu      sync.Mutex
+	defaultCapacity   int
+	defaultRefillRate int
 }
 
-func NewRateLimiter() *RateLimiter {
+
+
+func NewRateLimiter(defaultCapacity, defaultRefill int) *RateLimiter {
 	return &RateLimiter{
 		buckets: make(map[string]*TokenBucket),
+		defaultCapacity:   defaultCapacity,
+		defaultRefillRate: defaultRefill,
 	}
 }
 
@@ -25,7 +29,7 @@ func (rl *RateLimiter) GetOrCreateBucket(clientIP string) *TokenBucket {
 		return bucket
 	}
 
-	bucket := NewTokenBucket(config.BucketCapacity, config.BucketRefillRate)
+	bucket := NewTokenBucket(rl.defaultCapacity, rl.defaultRefillRate)
 	rl.buckets[clientIP] = bucket
 	return bucket
 }

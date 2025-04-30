@@ -4,3 +4,7 @@ backendURLs:
   - http://localhost:9001
   - http://localhost:9002
   - http://localhost:9003
+healthCheckInterval: 10  # Time in seconds between health checks
+rateLimitDefaults:
+  bucketRefillRate: 1
+  bucketCapacity: 5

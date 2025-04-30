@@ -3,8 +3,8 @@ package balancer
 import (
 	"fmt"
 	"math/rand"
-	"net/url"
 	"net/http"
+	"net/url"
 	"sync"
 	"time"
 
@@ -23,7 +23,7 @@ type LoadBalancer struct {
 	Index       int
 	Strategy    Strategy
 	mu          sync.Mutex
-	alive 			map[string]bool
+	alive       map[string]bool
 }
 
 func NewLoadBalancer(backendURLs []string, strategy Strategy) *LoadBalancer {
@@ -37,7 +37,7 @@ func NewLoadBalancer(backendURLs []string, strategy Strategy) *LoadBalancer {
 	return &LoadBalancer{
 		BackendURLs: backendURLs,
 		Strategy:    strategy,
-		alive: aliveMap,
+		alive:       aliveMap,
 	}
 }
 
@@ -84,7 +84,7 @@ func (lb *LoadBalancer) GetNextBackendURL() (*url.URL, error) {
 }
 
 func (lb *LoadBalancer) selectRoundRobin(liveBackends []string) (string, error) {
-	selected := liveBackends[lb.Index % len(liveBackends)]
+	selected := liveBackends[lb.Index%len(liveBackends)]
 	lb.Index = (lb.Index + 1) % len(liveBackends)
 	return selected, nil
 }
@@ -94,7 +94,7 @@ func (lb *LoadBalancer) selectRandom(liveBackends []string) (string, error) {
 }
 
 func (lb *LoadBalancer) StartHealthCheck(interval time.Duration) {
-	ticker := time.NewTicker(time.Second * interval)
+	ticker := time.NewTicker(interval)
 
 	go func() {
 		for range ticker.C {
@@ -111,7 +111,7 @@ func (lb *LoadBalancer) healthCheck() {
 
 	for _, backendURL := range lb.BackendURLs {
 		go func(url string) {
-			client := http.Client {
+			client := http.Client{
 				Timeout: 2 * time.Second,
 			}
 			resp, err := client.Get(url + "/health")

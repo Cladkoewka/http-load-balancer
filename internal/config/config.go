@@ -10,6 +10,13 @@ import (
 type Config struct {
 	Port        int      `yaml:"port"`
 	BackendURLs []string `yaml:"backendURLs"`
+	HealthCheckInterval int `yaml:"healthCheckInterval"`
+	RateLimitDefaults RateLimitDefaults `yaml:"rateLimitDefaults"`
+}
+
+type RateLimitDefaults struct {
+	BucketRefillRate int `yaml:"bucketRefillRate"`
+	BucketCapacity int `yaml:"bucketCapacity"`
 }
 
 func Load(filename string) (*Config, error) {
