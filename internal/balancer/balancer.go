@@ -27,7 +27,7 @@ type LoadBalancer struct {
 }
 
 func NewLoadBalancer(backendURLs []string, strategy Strategy) *LoadBalancer {
-	rand.Seed(time.Now().UnixNano()) // init rand generator
+	rand.New(rand.NewSource(time.Now().UnixMicro())) // init rand generator
 
 	aliveMap := make(map[string]bool, len(backendURLs))
 	for _, url := range backendURLs {

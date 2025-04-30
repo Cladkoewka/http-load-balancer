@@ -18,9 +18,12 @@ func main() {
 	}
 
 	// Simple test handler
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/", func(rw http.ResponseWriter, r *http.Request) {
 		msg := fmt.Sprintf("Hello from test backend on port %s\n", port)
-		w.Write([]byte(msg))
+		_, err := rw.Write([]byte(msg))
+		if err != nil {
+			fmt.Println("Failed to write message:", err)
+		}
 	})
 
 	fmt.Printf("Test backend listening on port %s\n", port)
